@@ -8,7 +8,8 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/exceptions/base.exception.filter';
 import { HttpExceptionFilter } from './common/exceptions/http.exception.filter';
-
+import { generateDocument } from './doc';
+declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -24,6 +25,12 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
   // 异常捕获
   app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter()); // 注意顺序
+  // 创建文档
+  generateDocument(app);
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
   await app.listen(3000);
 }
 bootstrap();

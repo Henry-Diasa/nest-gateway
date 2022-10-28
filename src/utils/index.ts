@@ -1,6 +1,8 @@
 import { parse } from 'yaml';
-import path from 'path';
-import fs from 'fs';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fs = require('fs');
 
 export const getEnv = () => {
   return process.env.RUNNING_ENV;
