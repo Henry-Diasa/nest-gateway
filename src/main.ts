@@ -13,12 +13,19 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/exceptions/base.exception.filter';
 import { HttpExceptionFilter } from './common/exceptions/http.exception.filter';
 import { generateDocument } from './doc';
+import fastifyCookie from '@fastify/cookie';
+import { FastifyLogger } from './common/logger';
 declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({
+      logger: FastifyLogger,
+    }),
   );
+  app.register(fastifyCookie, {
+    secret: 'my-secret', // for cookies signature
+  });
   // 接口版本管理
   app.enableVersioning({
     // VERSION_NEUTRAL 有些控制器不需要版本控制
